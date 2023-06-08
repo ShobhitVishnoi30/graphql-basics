@@ -3,12 +3,9 @@ import { type } from 'os';
 
 @InputType()
 export class AddBookArgs {
-  @Field((type) => Int)
-  id: number;
-
-  @Field()
+  @Field({ nullable: true })
   title: string;
 
-  @Field((type) => Int)
+  @Field((type) => Int, { nullable: true })
   price: number;
 }

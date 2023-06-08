@@ -1,37 +1,77 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AddBookArgs } from 'src/args/add.book.args';
 import { BookEntity } from 'src/entity/book.entity';
-import { Book } from 'src/schema/book.schema';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class BookService {
-  bookData: BookEntity[] = [];
+  constructor(
+    @InjectRepository(BookEntity)
+    private readonly bookRepository: Repository<BookEntity>,
+  ) {}
 
-  addBook(book: BookEntity): string {
-    this.bookData.push(book);
-    return 'book added successfully';
-  }
+  async addBook(book: AddBookArgs) {
+    try {
+      let newBook = this.bookRepository.create(book);
 
-  updateBook(id: number, updatedBook: BookEntity): string {
-    const index = this.bookData.findIndex((book) => book.id === id);
+      newBook = await this.bookRepository.save(newBook);
 
-    if (index !== -1) {
-      this.bookData[index] = updatedBook;
-      return 'Book updated successfully';
-    } else {
-      return 'Book not found';
+      return 'Book added successfully';
+    } catch (error) {
+      return 'Book not added';
     }
   }
 
-  deleteBook(id: number): string {
-    this.bookData = this.bookData.filter((book) => book.id !== id);
-    return 'book deleted successfully';
+  async updateBook(id: string, updatedBook: AddBookArgs) {
+    try {
+      let book = await this.bookRepository.findOne({
+        where: {
+          id,
+        },
+      });
+      if (!book) {
+        throw new Error('No book exist with this id');
+      }
+      Object.keys(updatedBook).forEach((key) => {
+        if (updatedBook[key]) {
+          return (book[key] = updatedBook[key]);
+        }
+      });
+
+      await this.bookRepository.save(book);
+      return 'book updated successfuly';
+    } catch (err) {
+      return err.message;
+    }
   }
 
-  getBooks(): BookEntity[] {
-    return this.bookData;
+  async deleteBook(id: string) {
+    try {
+      await this.bookRepository.delete(id);
+      return 'Book deleted successfully';
+    } catch (err) {
+      return err.message;
+    }
   }
 
-  getBookById(id: number): BookEntity {
-    return this.bookData.find((book) => book.id === id);
+  async getBooks() {
+    try {
+      return await this.bookRepository.find();
+    } catch (err) {
+      return err.message;
+    }
+  }
+
+  async getBookById(id: string) {
+    try {
+      return await this.bookRepository.findOne({
+        where: {
+          id,
+        },
+      });
+    } catch (err) {
+      return err.message;
+    }
   }
 }

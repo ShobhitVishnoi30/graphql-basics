@@ -9,26 +9,25 @@
 /* eslint-disable */
 
 export interface AddBookArgs {
-    id: number;
-    title: string;
-    price: number;
+    title?: Nullable<string>;
+    price?: Nullable<number>;
 }
 
 export interface Book {
-    id: number;
+    id: string;
     title: string;
     price: number;
 }
 
 export interface IQuery {
     books(): Book[] | Promise<Book[]>;
-    findBookById(bookId: number): Nullable<Book> | Promise<Nullable<Book>>;
+    findBookById(bookId: string): Nullable<Book> | Promise<Nullable<Book>>;
 }
 
 export interface IMutation {
-    deleteBook(bookId: number): string | Promise<string>;
+    deleteBook(bookId: string): string | Promise<string>;
     addBook(addBookArgs: AddBookArgs): string | Promise<string>;
-    updateBook(bookId: number, updateBookArgs: AddBookArgs): string | Promise<string>;
+    updateBook(bookId: string, updateBookArgs: AddBookArgs): string | Promise<string>;
 }
 
 type Nullable<T> = T | null;

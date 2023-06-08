@@ -2,8 +2,8 @@ import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 
 @Entity()
 export class BookEntity {
-  @Column()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   title: string;
