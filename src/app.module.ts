@@ -28,15 +28,6 @@ import { envSchema } from './utilities/joi-validation';
       ],
       synchronize: true,
     }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      playground: true,
-      autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
-      definitions: {
-        path: join(process.cwd(), 'src/graphql.ts'),
-      },
-      // typePaths: ['./**/*.graphql'],
-    }),
     BookModule,
   ],
   controllers: [],

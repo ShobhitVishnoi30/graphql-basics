@@ -216,7 +216,7 @@ Deletes a book from the database.
 
 ```graphql
 mutation {
-  DeleteBook($bookId:Int!){
+  DeleteBook($bookId:String!){
     deleteBook(bookId:$bookId)
   }
 }
